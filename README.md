@@ -17,9 +17,9 @@ The second level will be TV and music playing. We will have 3 LED stimuli and re
 We plan to collect 80 sets of data using the arduino setup below.
 
 - Arduino Layout
-  - ![image](https://github.com/abril-AL/Three-LED-reaction-time/assets/103137140/473dcc72-0960-4fe6-8b41-4fafb9bb98cd)
-  - Credit: circuit by [mina.raafat62](https://www.tinkercad.com/things/frE5D4H3cFd-3-led-with-3-push-buttons-mina) on Tinkercad
+  - ![image](https://github.com/abril-AL/Three-LED-reaction-time/assets/103137140/267f9cef-1452-41e9-9186-4748f2b6845d)
+  - Credit: circuit by [Abril Aguilar-Lopez]([https://www.tinkercad.com/things/frE5D4H3cFd-3-led-with-3-push-buttons-mina](https://www.tinkercad.com/things/jwfZ7pfeivH)) on Tinkercad
  
 - Circuit Schematic
-  - ![image](https://github.com/abril-AL/Three-LED-reaction-time/assets/103137140/470a3ec6-08d4-4a03-86c5-3cc7776c73fb)
+  - [3-LED-reaction-time.pdf](https://github.com/abril-AL/Three-LED-reaction-time/files/12505499/3-LED-reaction-time.pdf)
 
