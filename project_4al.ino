@@ -18,7 +18,8 @@ enum LEDS
 { // enumeration for switch statement support
     RED,
     GREEN,
-    BLUE
+    BLUE,
+    last // for modulus calc
 };
 long currLED;
 
@@ -123,7 +124,7 @@ void loop()
         break;
     }
 
-    // testing stuff:
+    ///// testing stuff: ////
     delay(2000);
     analogWrite(redPin, 0);
     analogWrite(greenPin, 0);
@@ -145,7 +146,7 @@ void loop()
         break;
     }
 
-    currLED = random(0, 3); // set next LED to be lit up (rand)
+    currLED = getRandLED();
 }
 
 // =======================================================================
@@ -166,4 +167,10 @@ void blink()
         analogWrite(bluePin, 0);
         delay(250);
     }
+}
+
+LEDS getRandLED()
+{
+    LEDS randLED = static_cast<LEDS>(rand() % last);
+    return randLED;
 }
