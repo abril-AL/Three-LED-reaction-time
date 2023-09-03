@@ -4,29 +4,21 @@
 
   Version DD/MM/YY
   1.00    28/08/2023   Running code
-
+  1.10    03/09/2023   Mostly working for three leds minus hardware issues
 */
 
 // =======================================================================
 //                  V A R I A B L E   D E C L A R A T I O N S
 // =======================================================================
 // LED variables
-#define redPin 10
-#define greenPin 11
-#define bluePin 12
-enum LEDS
-{ // enumeration for switch statement support
-    RED,
-    GREEN,
-    BLUE,
-    last // for modulus calc
-};
-long currLED;
+#define redPin 9
+#define greenPin 10
+#define bluePin 11
 
 // each LED needs its own brightness level
-#define redBrightness 190
-#define greenBrightness 10
-#define blueBrightness 1500
+#define redBrightness 125
+#define greenBrightness 50
+#define blueBrightness 220
 
 // LEDS States
 int redState = LOW;
@@ -34,9 +26,9 @@ int greenState = LOW;
 int blueState = LOW;
 
 // Button variables
-#define redButtonPin 7
-#define greenButtonPin 8
-#define blueButtonPin 9
+#define redButtonPin 2
+#define greenButtonPin 4
+#define blueButtonPin 7
 
 // Button States
 int redButtonState = LOW;
@@ -49,13 +41,19 @@ long newT;
 long oldT;
 long deltaT;
 
+// LED Variables
+#define numOfLEDs 3
+char LEDs[numOfLEDs] = {'R', 'G', 'B'};
+char currLED;
+int randLED;
+
 // =======================================================================
 //                              S  E  T  U  P
 // =======================================================================
 
 void setup()
 {
-    // initialize analog pins as an output
+    // initialize LED pins as an output
     pinMode(redPin, OUTPUT);
     pinMode(greenPin, OUTPUT);
     pinMode(bluePin, OUTPUT);
@@ -65,15 +63,32 @@ void setup()
     pinMode(greenButtonPin, INPUT);
     pinMode(blueButtonPin, INPUT);
 
+    // initialize serial communication.
+    Serial.begin(9600);
+
+    // The LED will blink 3 times for 250 ms to indicate the start of the experiment
     Serial.println("Prepare. Reaction time experiments will begin shortly!");
-    blink();
+    for (int i = 0; i < 3; i++)
+    {
+        analogWrite(redPin, redBrightness);
+        analogWrite(greenPin, greenBrightness);
+        analogWrite(bluePin, blueBrightness);
+        delay(250);
+        analogWrite(redPin, 0);
+        analogWrite(greenPin, 0);
+        analogWrite(bluePin, 0);
+        delay(250);
+    }
     // Create a random seed for the random number generator.
-    // then delay a random amount of time - between 1 to 2.5 seconds
+    // then delay a random amount of time - between 0.5 to 2.0 seconds
     randomSeed(analogRead(A0));
-    randDelay = random(3000, 3000);
+    randDelay = random(500, 2000);
     delay(randDelay);
     // pick first LED (rand) to light up
-    currLED = random(0, 3); // rand num 1-3 -> corresponds to enum #
+    randLED = random(0, numOfLEDs);
+    currLED = LEDs[randLED];
+    // Serial.println(currLED);
+    delay(randDelay);
 }
 
 // =======================================================================
@@ -89,88 +104,80 @@ void loop()
     blueButtonState = digitalRead(blueButtonPin);
 
     // check which led is going to turn on and criteria to start trial
-    switch (currLED)
-    {
-    case 0: // red
-        if (redState == LOW && redButtonState == LOW)
-        {
-            // Turn the LED on and record the time, trial has begun
-            analogWrite(redPin, redBrightness);
-            oldT = millis();
-            redState = HIGH;
-        }
-        break;
-    case 1: // green
-        if (greenState == LOW && greenButtonState == LOW)
-        {
-            // Turn the LED on and record the time, trial has begun
-            analogWrite(greenPin, greenBrightness);
-            oldT = millis();
-            greenState = HIGH;
-        }
-        break;
-    case 2: // blue
-        if (blueState == LOW && blueButtonState == LOW)
-        {
-            // Turn the LED on and record the time, trial has begun
-            analogWrite(bluePin, blueBrightness);
-            oldT = millis();
-            blueState = HIGH;
-        }
-        break;
-    default:
-        // somethings broken with rand LED assignment if it goes here
-        Serial.println("ERR ===== What the scallop !? =====");
-        break;
-    }
 
-    ///// testing stuff: ////
-    delay(2000);
-    analogWrite(redPin, 0);
-    analogWrite(greenPin, 0);
-    analogWrite(bluePin, 0);
-    redButtonState = LOW;
-    greenButtonState = LOW;
-    blueButtonState = LOW;
-    /////////////////////////
+    if (redState == LOW && redButtonState == LOW && currLED == 'R')
+    {
+        // Turn the LED on and record the time, trial has begun
+        analogWrite(redPin, redBrightness);
+        oldT = millis();
+        redState = HIGH;
+    }
+    if (greenState == LOW && greenButtonState == LOW && currLED == 'G')
+    {
+        analogWrite(greenPin, greenBrightness);
+        oldT = millis();
+        greenState = HIGH;
+    }
+    if (blueState == LOW && blueButtonState == LOW && currLED == 'B')
+    {
+        analogWrite(bluePin, blueBrightness);
+        oldT = millis();
+        blueState = HIGH;
+    }
 
     // criteria to end trial (add later)
-    switch (currLED)
-    {
-    case 0: // red
-    case 1: // green
-    case 2: // blue
-    default:
-        // somethings broken with button/checks if it goes here
-        Serial.println("ERR ===== What the button !? =====");
-        break;
-    }
 
-    currLED = getRandLED();
+    if (redState == HIGH && redButtonState == HIGH && currLED == 'R')
+    {
+        // Record time when button was pressed and turn off LED.
+        newT = millis();
+        analogWrite(redPin, 0);
+
+        // Print to serial monitor the time difference between LED turn off to button press.
+        //  This is the reaction time
+        deltaT = newT - oldT;
+        Serial.print(deltaT);
+        Serial.print(',');
+        Serial.println(currLED);
+
+        // Reset trial and wait a random amount of time for next trial.
+        redState = LOW;
+        randDelay = random(1000, 3000);
+        currLED = LEDs[random(0, numOfLEDs)];
+        delay(randDelay);
+    }
+    if (greenState == HIGH && greenButtonState == HIGH && currLED == 'G')
+    {
+        newT = millis();
+        analogWrite(greenPin, 0);
+
+        deltaT = newT - oldT;
+        Serial.print(deltaT);
+        Serial.print(',');
+        Serial.println(currLED);
+
+        greenState = LOW;
+        randDelay = random(1000, 3000);
+        currLED = LEDs[random(0, numOfLEDs)];
+        delay(randDelay);
+    }
+    if (blueState == HIGH && blueButtonState == HIGH && currLED == 'B')
+    {
+        newT = millis();
+        analogWrite(bluePin, 0);
+
+        deltaT = newT - oldT;
+        Serial.print(deltaT);
+        Serial.print(',');
+        Serial.println(currLED);
+
+        blueState = LOW;
+        randDelay = random(1000, 3000);
+        currLED = LEDs[random(0, numOfLEDs)];
+        delay(randDelay);
+    }
 }
 
 // =======================================================================
 //                       F  U  N  C  T  I  O  N  S
 // =======================================================================
-
-void blink()
-{
-    // three lights blink three times
-    for (int i = 0; i <= 2; i++)
-    {
-        analogWrite(redPin, redBrightness);
-        analogWrite(greenPin, greenBrightness);
-        analogWrite(bluePin, blueBrightness);
-        delay(250);
-        analogWrite(redPin, 0);
-        analogWrite(greenPin, 0);
-        analogWrite(bluePin, 0);
-        delay(250);
-    }
-}
-
-LEDS getRandLED()
-{
-    LEDS randLED = static_cast<LEDS>(rand() % last);
-    return randLED;
-}
