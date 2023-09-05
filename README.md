@@ -31,11 +31,12 @@ We plan to collect 80 sets of data using the arduino setup below.
 
 ### Hardware Setup
 - Arduino Layout
-  - ![image](https://github.com/abril-AL/Three-LED-reaction-time/assets/103137140/473dcc72-0960-4fe6-8b41-4fafb9bb98cd)
-  - Credit: circuit by [mina.raafat62](https://www.tinkercad.com/things/frE5D4H3cFd-3-led-with-3-push-buttons-mina) on Tinkercad
+  - ![image](https://github.com/abril-AL/Three-LED-reaction-time/assets/103137140/267f9cef-1452-41e9-9186-4748f2b6845d)
+  - Credit: circuit by [Abril Aguilar-Lopez](https://www.tinkercad.com/things/jwfZ7pfeivH) on Tinkercad
  
 - Circuit Schematic
-  - ![image](https://github.com/abril-AL/Three-LED-reaction-time/assets/103137140/470a3ec6-08d4-4a03-86c5-3cc7776c73fb)
+  - ![image](https://github.com/abril-AL/Three-LED-reaction-time/assets/103137140/b3148ff7-9fd7-48bf-969b-2c9f58adea06)
+
 
 ### Data Collection
 - Controls
