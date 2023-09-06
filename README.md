@@ -5,7 +5,7 @@
 ### Introduction
 Reaction time is the time between the presentation of a stimulus and the occurrence of a specific response to it.
 Our project will focus on an LED stimulus, with red, green, and blue LEDS; as well as a button pressing response, one for each, in order to record the time. 
-This project is similar to Lab 1C (UCLA Physics Dept.) which compares reaction time for two different stimuli types. 
+This project is similar to Lab 1C (UCLA Physics Dept.), which compares reaction time for two different stimuli types. 
 Similar reaction time labs have been done but do not measure the effect of different distractions in addition to multiple color LEDs. 
 This approach brings a unique perspective to our project.  
 
